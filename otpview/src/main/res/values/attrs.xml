@@ -38,6 +38,7 @@
     <attr format="dimension" name="OtpCursorWidth"/>
     <attr format="reference|color" name="OtpCursorColor"/>
     <attr name="android:itemBackground"/>
+    <attr name="android:selectableItemBackground"/>
     <attr format="boolean" name="OtpHideLineWhenFilled"/>
     <attr format="boolean" name="OtpState_filled"/>
     <attr format="boolean" name="OtpRtlTextDirection"/>

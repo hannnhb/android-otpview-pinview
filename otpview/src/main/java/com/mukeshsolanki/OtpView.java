@@ -72,6 +72,7 @@ public class OtpView extends AppCompatEditText {
   private int cursorColor;
   private int itemBackgroundResource;
   private Drawable itemBackground;
+  private Drawable itemBackgroundSelected;
   private boolean hideLineWhenFilled;
   private boolean rtlTextDirection;
   private String maskingChar;
@@ -112,6 +113,7 @@ public class OtpView extends AppCompatEditText {
     cursorWidth = typedArray.getDimensionPixelSize(R.styleable.OtpView_OtpCursorWidth,
         res.getDimensionPixelSize(R.dimen.otp_view_cursor_width));
     itemBackground = typedArray.getDrawable(R.styleable.OtpView_android_itemBackground);
+    itemBackgroundSelected = typedArray.getDrawable(R.styleable.OtpView_android_selectableItemBackground);
     hideLineWhenFilled = typedArray.getBoolean(R.styleable.OtpView_OtpHideLineWhenFilled, false);
     rtlTextDirection = typedArray.getBoolean(R.styleable.OtpView_OtpRtlTextDirection, false);
     maskingChar = typedArray.getString(R.styleable.OtpView_OtpMaskingChar);
@@ -390,7 +392,26 @@ public class OtpView extends AppCompatEditText {
     if (getText() != null && hideLineWhenFilled && i < getText().length()) {
       return;
     }
-    canvas.drawPath(path, paint);
+
+    if (!isFocused()) return;
+    if (i != getText().length()) return;
+//    Path customPath = new Path();
+//    canvas.drawPath(customPath, paint);
+
+
+    if (itemBackgroundSelected == null) {
+      return;
+    }
+    float delta = (float) lineWidth / 2;
+    int left = Math.round(itemBorderRect.left - delta);
+    int top = Math.round(itemBorderRect.top - delta);
+    int right = Math.round(itemBorderRect.right + delta);
+    int bottom = Math.round(itemBorderRect.bottom + delta);
+    itemBackgroundSelected.setBounds(left, top, right, bottom);
+    if(viewType != VIEW_TYPE_NONE) {
+      itemBackgroundSelected.setState(getDrawableState());
+    }
+    itemBackgroundSelected.draw(canvas);
   }
 
   private void drawOtpLine(Canvas canvas, int i) {
