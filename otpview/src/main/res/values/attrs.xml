@@ -38,6 +38,9 @@
     <attr format="dimension" name="OtpCursorWidth"/>
     <attr format="reference|color" name="OtpCursorColor"/>
     <attr name="android:itemBackground"/>
+    <attr name="OtpItemBackgroundFilled"/>
+    <attr name="OtpItemBackgroundInvalid"/>
+    <attr name="OtpItemBackgroundRemove"/>
     <attr name="android:selectableItemBackground"/>
     <attr format="boolean" name="OtpHideLineWhenFilled"/>
     <attr format="boolean" name="OtpState_filled"/>

@@ -28,6 +28,7 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
 import androidx.annotation.Px;
 import androidx.appcompat.widget.AppCompatEditText;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.ViewCompat;
 
@@ -72,7 +73,13 @@ public class OtpView extends AppCompatEditText {
   private int cursorColor;
   private int itemBackgroundResource;
   private Drawable itemBackground;
+  private Drawable itemBackgroundRemove;
   private Drawable itemBackgroundSelected;
+  private Drawable itemBackgroundFilled;
+  private Drawable itemBackgroundExtra;
+
+  private Drawable itemBackgroundFilledSaved;
+  private Drawable errorBackground;
   private boolean hideLineWhenFilled;
   private boolean rtlTextDirection;
   private String maskingChar;
@@ -112,8 +119,12 @@ public class OtpView extends AppCompatEditText {
     cursorColor = typedArray.getColor(R.styleable.OtpView_OtpCursorColor, getCurrentTextColor());
     cursorWidth = typedArray.getDimensionPixelSize(R.styleable.OtpView_OtpCursorWidth,
         res.getDimensionPixelSize(R.dimen.otp_view_cursor_width));
-    itemBackground = typedArray.getDrawable(R.styleable.OtpView_android_itemBackground);
+    itemBackgroundFilled = typedArray.getDrawable(R.styleable.OtpView_android_itemBackground);
+    itemBackgroundFilledSaved = typedArray.getDrawable(R.styleable.OtpView_android_itemBackground);
     itemBackgroundSelected = typedArray.getDrawable(R.styleable.OtpView_android_selectableItemBackground);
+    itemBackground = typedArray.getDrawable(R.styleable.OtpView_OtpItemBackgroundFilled);
+    itemBackgroundExtra = typedArray.getDrawable(R.styleable.OtpView_OtpItemBackgroundFilled);
+    errorBackground = typedArray.getDrawable(R.styleable.OtpView_OtpItemBackgroundInvalid);
     hideLineWhenFilled = typedArray.getBoolean(R.styleable.OtpView_OtpHideLineWhenFilled, false);
     rtlTextDirection = typedArray.getBoolean(R.styleable.OtpView_OtpRtlTextDirection, false);
     maskingChar = typedArray.getString(R.styleable.OtpView_OtpMaskingChar);
@@ -206,6 +217,8 @@ public class OtpView extends AppCompatEditText {
 
   @Override
   protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
+    removeOldAndSetNewItemBackground(itemBackgroundExtra);
+//    onOtpCompletionListener.onOtpChanged();
     if (start != text.length()) {
       moveSelectionToEnd();
     }
@@ -394,24 +407,81 @@ public class OtpView extends AppCompatEditText {
     }
 
     if (!isFocused()) return;
-    if (i != getText().length()) return;
-//    Path customPath = new Path();
-//    canvas.drawPath(customPath, paint);
 
+    int nextItemToFill;
+    if (rtlTextDirection) {
+      nextItemToFill = otpViewItemCount - 1;
+    } else {
+      if (getText() != null) {
+        nextItemToFill = getText().length();
+      } else {
+        nextItemToFill = 0;
+      }
+    }
 
-    if (itemBackgroundSelected == null) {
+    if (i < nextItemToFill) {
+      if (itemBackground == null) {
+        return;
+      }
+      float delta = (float) lineWidth / 2;
+      int left = Math.round(itemBorderRect.left - delta);
+      int top = Math.round(itemBorderRect.top - delta);
+      int right = Math.round(itemBorderRect.right + delta);
+      int bottom = Math.round(itemBorderRect.bottom + delta);
+      itemBackground.setBounds(left, top, right, bottom);
+      if(viewType != VIEW_TYPE_NONE) {
+        itemBackground.setState(getDrawableState());
+      }
+      itemBackground.draw(canvas);
       return;
     }
+
+    if (i > nextItemToFill) {
+      if (itemBackgroundFilled == null) {
+        return;
+      }
+      float delta = (float) lineWidth / 2;
+      int left = Math.round(itemBorderRect.left - delta);
+      int top = Math.round(itemBorderRect.top - delta);
+      int right = Math.round(itemBorderRect.right + delta);
+      int bottom = Math.round(itemBorderRect.bottom + delta);
+      itemBackgroundFilled.setBounds(left, top, right, bottom);
+      if(viewType != VIEW_TYPE_NONE) {
+        itemBackgroundFilled.setState(getDrawableState());
+      }
+      itemBackgroundFilled.draw(canvas);
+      return;
+    }
+
+    if (i == getText().length() || nextItemToFill == 1) {
+      if (itemBackgroundSelected == null) {
+        return;
+      }
+      float delta = (float) lineWidth / 2;
+      int left = Math.round(itemBorderRect.left - delta);
+      int top = Math.round(itemBorderRect.top - delta);
+      int right = Math.round(itemBorderRect.right + delta);
+      int bottom = Math.round(itemBorderRect.bottom + delta);
+      itemBackgroundSelected.setBounds(left, top, right, bottom);
+      if(viewType != VIEW_TYPE_NONE) {
+        itemBackgroundSelected.setState(getDrawableState());
+      }
+      itemBackgroundSelected.draw(canvas);
+    }
+  }
+
+  private void clearOtpItem(Canvas canvas) {
+    if (itemBackgroundRemove == null) return;
     float delta = (float) lineWidth / 2;
     int left = Math.round(itemBorderRect.left - delta);
     int top = Math.round(itemBorderRect.top - delta);
     int right = Math.round(itemBorderRect.right + delta);
     int bottom = Math.round(itemBorderRect.bottom + delta);
-    itemBackgroundSelected.setBounds(left, top, right, bottom);
+    itemBackgroundRemove.setBounds(left, top, right, bottom);
     if(viewType != VIEW_TYPE_NONE) {
-      itemBackgroundSelected.setState(getDrawableState());
+      itemBackgroundRemove.setState(getDrawableState());
     }
-    itemBackgroundSelected.draw(canvas);
+    itemBackgroundRemove.draw(canvas);
   }
 
   private void drawOtpLine(Canvas canvas, int i) {
@@ -896,6 +966,15 @@ public class OtpView extends AppCompatEditText {
     itemBackgroundResource = resId;
   }
 
+
+  public void setItemErrorBackgroundResources(@DrawableRes int resId) {
+    if (resId != 0) {
+      return;
+    }
+    errorBackground = ResourcesCompat.getDrawable(getResources(), resId, getContext().getTheme());
+    setItemBackground(errorBackground);
+  }
+
   /**
    * Sets the item background color for this view.
    *
@@ -917,6 +996,12 @@ public class OtpView extends AppCompatEditText {
    * item background
    */
   public void setItemBackground(Drawable background) {
+    itemBackgroundResource = 0;
+    itemBackground = background;
+    invalidate();
+  }
+
+  private void removeOldAndSetNewItemBackground(Drawable background) {
     itemBackgroundResource = 0;
     itemBackground = background;
     invalidate();

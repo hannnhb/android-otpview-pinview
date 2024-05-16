@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.mukeshsolanki.OnOtpCompletionListener
 import com.mukeshsolanki.OtpView
 
@@ -39,5 +40,10 @@ class ViewSystemExampleActivity : AppCompatActivity(), View.OnClickListener,
 
   override fun onOtpCompleted(otp: String?) {
     Toast.makeText(this, "OnOtpCompletionListener called", Toast.LENGTH_SHORT).show()
+    otpView?.setItemBackground(ContextCompat.getDrawable(applicationContext, R.drawable.bg_otp_item))
   }
+
+//  override fun onOtpChanged() {
+//    TODO("Not yet implemented")
+//  }
 }
