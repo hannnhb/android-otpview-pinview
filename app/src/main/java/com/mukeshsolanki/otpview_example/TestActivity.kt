@@ -5,6 +5,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.mukeshsolanki.OnOtpCompletionListener
 import com.mukeshsolanki.OtpView
@@ -33,7 +34,7 @@ class TestActivity: AppCompatActivity() {
                 otpView.setItemBackground(ContextCompat.getDrawable(applicationContext, R.drawable.bg_item_unselected_otp))
             }
         }
-        val rootLayout = findViewById<LinearLayout>(R.id.contentLayout)
+        val rootLayout = findViewById<ConstraintLayout>(R.id.contentLayout)
         rootLayout.setOnClickListener {
             otpView?.clearFocus()
         }

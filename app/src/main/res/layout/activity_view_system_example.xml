@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/contentLayout"
@@ -21,16 +21,24 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="72dp"
         android:text="@string/validate"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/verification_code_subtext"
         android:textAlignment="center"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/validate_button" />
 
     <TextView
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="72dp"
@@ -38,28 +46,38 @@
         android:text="@string/verification_code"
         android:textColor="@android:color/black"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView" />
 
     <com.mukeshsolanki.OtpView
         android:id="@+id/otp_view"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="72dp"
+        android:layout_marginEnd="32dp"
+        android:width="30dp"
+        android:clickable="true"
+        android:cursorVisible="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:inputType="number"
-        app:OtpItemBackgroundInvalid="@drawable/bg_invalid_otp"
-        app:OtpItemBackgroundFilled="@drawable/bg_item_filled_otp"
         android:itemBackground="@drawable/bg_item_unselected_otp"
         android:selectableItemBackground="@drawable/bg_item_selected_otp"
         android:textAllCaps="true"
         android:textColor="@android:color/black"
-        android:clickable="true"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:cursorVisible="true"
         app:OtpCursorColor="#000000"
         app:OtpHideLineWhenFilled="true"
+        app:OtpItemBackgroundFilled="@drawable/bg_item_filled_otp"
+        app:OtpItemBackgroundInvalid="@drawable/bg_invalid_otp"
         app:OtpItemCount="6"
+        app:OtpItemHeight="60dp"
         app:OtpItemSpacing="6dp"
         app:OtpState_filled="true"
-        app:OtpViewType="rectangle" />
-</LinearLayout>
+        app:OtpViewType="rectangle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView1" />
+</androidx.constraintlayout.widget.ConstraintLayout>

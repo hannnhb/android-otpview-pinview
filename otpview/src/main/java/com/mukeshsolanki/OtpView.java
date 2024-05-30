@@ -200,6 +200,12 @@ public class OtpView extends AppCompatEditText {
     int width;
     int height;
     int boxHeight = otpViewItemHeight;
+    int measureItemWidth = (widthSize - ViewCompat.getPaddingStart(this ) - ViewCompat.getPaddingEnd(this) - (otpViewItemCount-1)*otpViewItemSpacing)/otpViewItemCount;
+    if (measureItemWidth >= otpViewItemWidth) {
+      otpViewItemWidth = otpViewItemWidth;
+    } else {
+      otpViewItemWidth = measureItemWidth;
+    }
     if (widthMode == MeasureSpec.EXACTLY) {
       width = widthSize;
     } else {
